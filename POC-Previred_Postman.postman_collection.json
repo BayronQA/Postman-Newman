@@ -1,0 +1,335 @@
+{
+	"info": {
+		"_postman_id": "57d0d36e-53c6-45df-b549-abdc79e066e6",
+		"name": "Actividad Final Postman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13647539"
+	},
+	"item": [
+		{
+			"name": "Flujo 1",
+			"item": [
+				{
+					"name": "listadoDeUsuariosActual",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "agregarUnNuevoUsuario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"userid\", jsonData.data.id);\r",
+									"pm.test(\"Usuario nuevo creado\", function () {\r",
+									"    \r",
+									"   pm.expect(jsonData.data.id).to.eql(pm.variables.get(\"userid\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1453750e02ad3cdbb079c8de21ee70868d6c73aff72593a37b0a223d61061376",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n     \r\n            \"name\": \"{{name}}\",\r\n            \"email\": \"{{email}}\",\r\n            \"gender\": \"Male\",\r\n            \"status\": \"Active\"\r\n        }\r\n       ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "confirmaQueAparezcaEnElListadoGeneral",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Confirmación usuario nuevo creado\", function () {\r",
+									"    pm.expect(jsonData.data.name).to.contain(pm.variables.get(\"name\"));\r",
+									"    pm.expect(jsonData.data.id).to.eql(pm.variables.get(\"userid\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users/{{userid}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{userid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ModificaInfoDeEseUsuario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Actualización de nombre\", function () {\r",
+									"       pm.expect(jsonData.data.name).to.eql(pm.variables.get(\"nombre_modificado\"));\r",
+									"       });\r",
+									"       pm.test(\"Actualización de email\", function () {\r",
+									"       pm.expect(jsonData.data.email).to.eql(pm.variables.get(\"email_modifcado\"));\r",
+									"       });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"name\": \"{{nombre_modificado}}\",\r\n            \"email\": \"{{email_modifcado}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{userid}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{userid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConfirmaCambioDeInfo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"name\", jsonData.data.name);\r",
+									"pm.test(\"Confirmación cambio de info\", function () {\r",
+									"    \r",
+									"   pm.expect(jsonData.data.name).to.eql(pm.variables.get(\"nombre_modificado\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users/{{userid}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{userid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "borrarUsuarioCreado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"code\", jsonData.code);\r",
+									"pm.test(\"Usuario eliminado\", function () {\r",
+									"    \r",
+									"   pm.expect(jsonData.code).to.eql(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users/{{userid}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{userid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConfirmaUsuarioBorrado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"code\", jsonData.code);\r",
+									"pm.test(\"Cofirmar Usuario eliminado\", function () {\r",
+									"    \r",
+									"   pm.expect(jsonData.code).to.eql(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users/{{userid}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{userid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "1453750e02ad3cdbb079c8de21ee70868d6c73aff72593a37b0a223d61061376",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": "https://gorest.co.in/public-api"
+		},
+		{
+			"key": "id_new_comment",
+			"value": ""
+		}
+	]
+}
