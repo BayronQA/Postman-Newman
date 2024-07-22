@@ -1,16 +1,12 @@
 pipeline {
     agent any
     stages {
-        stage('Checkout') {
+        stage('Build') {
             steps {
-                git 'https://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@github.com/BayronQA/Postman-Newman.git'
+                echo 'Building..'
             }
         }
-        stage('Run Postman Tests') {
+        stage('Test') {
             steps {
-                sh 'npm install -g newman'
-                sh 'newman run POC-Previred_Postman.postman_collection.json -e Ambiente_POC-Previred.postman_environment.json'
-            }
-        }
-    }
-}
+                script {
+                    bat 'node C:\Users\Bayron\AppData\Roaming\npm\newman run C:\Users\Bayron\Desktop\Postman-POC-Previred\POC-Previred_Postman.postman_collection.json -e C:\Users\Bayron\Desktop\Postman-POC-Previred\Ambiente_POC-Previred.postman_environment.json
