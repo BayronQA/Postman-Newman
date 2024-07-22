@@ -4,6 +4,12 @@ pipeline {
         nodejs 'NodeJS'  // Nombre de la instalación de NodeJS configurada en Jenkins
     }
     stages {
+        stage('Checkout') {
+            steps {
+                // Clonar el repositorio de GitHub
+                git url: 'https://github.com/BayronQA/Postman-Newman.git', branch: 'main'
+            }
+        }
         stage('Setup') {
             steps {
                 script {
@@ -21,7 +27,7 @@ pipeline {
             steps {
                 script {
                     // Ejecutar Newman usando el comando instalado globalmente
-                    bat 'newman run C:\\Users\\Bayron\\Desktop\\Postman-POC-Previred\\POC-Previred_Postman.postman_collection.json -e C:\\Users\\Bayron\\Desktop\\Postman-POC-Previred\\Ambiente_POC-Previred.postman_environment.json'
+                    bat 'newman run Postman-POC-Previred/POC-Previred_Postman.postman_collection.json -e Postman-POC-Previred/Ambiente_POC-Previred.postman_environment.json'
                 }
             }
         }
