@@ -6,8 +6,15 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Clonar el repositorio de GitHub
-                git url: 'https://github.com/BayronQA/Postman-Newman.git', branch: 'main'
+                script {
+                    // Clonar el repositorio de GitHub usando el token de acceso personal
+                    withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                        sh 'git clone https://$GITHUB_TOKEN@github.com/BayronQA/Postman-Newman.git'
+                        dir('Postman-Newman') {
+                            sh 'git checkout main'
+                        }
+                    }
+                }
             }
         }
         stage('Setup') {
@@ -27,7 +34,7 @@ pipeline {
             steps {
                 script {
                     // Ejecutar Newman usando el comando instalado globalmente
-                    bat 'newman run Postman-POC-Previred/POC-Previred_Postman.postman_collection.json -e Postman-POC-Previred/Ambiente_POC-Previred.postman_environment.json'
+                    bat 'newman run Postman-Newman/POC-Previred_Postman.postman_collection.json -e Postman-Newman/Ambiente_POC-Previred.postman_environment.json'
                 }
             }
         }
